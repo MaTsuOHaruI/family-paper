@@ -1,14 +1,16 @@
 import { Ionicons } from '@expo/vector-icons';
 import { Tabs } from 'expo-router';
 import type { ComponentProps } from 'react';
+import type { ColorValue } from 'react-native';
 
 import { useAppTheme } from '@/theme';
 
 type IconName = ComponentProps<typeof Ionicons>['name'];
 
 function createTabIcon(name: IconName) {
-  return function TabIcon({ color, size }: { color: string; size: number }) {
-    return <Ionicons name={name} size={size} color={color} />;
+  return function TabIcon({ color, size }: { color: ColorValue; size: number }) {
+    // タブバーから渡される ColorValue は null を含み得るが、Ionicons は null を受け付けない。
+    return <Ionicons name={name} size={size} color={color ?? undefined} />;
   };
 }
 

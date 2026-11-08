@@ -10,7 +10,7 @@
 ## 現在地
 
 - フェーズ: Sprint 0（開発基盤）
-- 現在のタスク: **S0-05**（共通UI・テーマ）— ファイル作成済み（`s0-05.zip`）。パッケージ導入（`@expo/vector-icons`）、テンプレート由来ファイルの削除、各コマンドの実行・画面確認はユーザーのローカルで行う（結果待ち）
+- 現在のタスク: **S0-05**（共通UI・テーマ）— コミット済み（5462962, f06635d）。`tsc` の型エラー 5 件（タブアイコンの `color` の型）を修正中（`s0-05b.zip`）。`npm run check` の再実行と画面確認が残り
 - 次のタスク: S0-06（Supabase 準備。テーブルなし）。S0-09（CI）は品質ゲートが整ったので S0-06 の前後どちらでも可
 
 ## 完了済み
@@ -92,6 +92,10 @@
 - `npm audit --omit=dev`: 5 件 moderate（`glob` 9.0.0–14.0.1、`minimatch` 7.0.0–11.0.0。`expo` 内の `@expo/cli`・`@expo/fingerprint` 経由）。修正案は `expo@52.0.49`（破壊的）のため実行しない
 - 注意: `eslint@9.39.5` は npm で「サポート終了」の警告が出る。ESLint 10 への移行は `eslint-config-expo` 側の対応を見て、SDK 更新時に検討する
 - 注意: ユーザー環境ではコマンドを複数行まとめて貼ると連結されることがあった。手順は 1 行ずつ、または `;` 区切りの 1 行にして渡す
+
+- 2026-11-08 S0-05: `git rm`（テンプレート由来 8 ファイル）、`s0-05.zip` 展開、コミット 5462962。`npm run format` は `src/app/(tabs)/_layout.tsx` のみ変更 → コミット f06635d
+- `npm run check`: `typecheck` で 5 件のエラー（すべて `src/app/(tabs)/_layout.tsx`、`tabBarIcon` に渡した関数の引数 `color: string` が React Navigation の `ColorValue` と不一致）。lint・test は未実行（typecheck で停止）。対応: 引数の型を `ColorValue`（react-native）に変更
+- `npx expo start --web`: 全タブ・書類詳細のバンドル成功（エラーなし）。アイコン表示とダークモードの見た目は未報告
 
 ## 更新ルール
 
