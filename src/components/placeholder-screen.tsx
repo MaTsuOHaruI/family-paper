@@ -36,7 +36,10 @@ export function PlaceholderScreen({ scrId, title, items, links }: Props) {
         {items.map((item) => (
           <Text
             key={item}
-            style={[styles.item, { color: colors.text, backgroundColor: colors.backgroundElement }]}>
+            style={[
+              styles.item,
+              { color: colors.text, backgroundColor: colors.backgroundElement },
+            ]}>
             {item}
           </Text>
         ))}
