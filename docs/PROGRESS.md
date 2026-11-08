@@ -3,15 +3,15 @@
 作業の再開時は、まず `CLAUDE.md` → 本ファイル → `docs/SPRINT_BACKLOG.md` の順に読む。
 状態の正はリポジトリ（本ファイルとバックログ）であり、チャットの記憶ではない。
 
-- 最終更新: 2026-11-08（S0-03 作成時）
+- 最終更新: 2026-11-08（S0-04 作成時）
 - 運用: GitHub への反映はユーザーが行う。Claude はチャット上でファイルを作成・更新して渡す。
 - 制約: Claude のチャット環境ではパッケージ導入・`tsc`・`expo` が実行できない（ネットワーク無効）。確認コマンドはユーザーのローカルまたは CI（S0-09）で実行し、出力を Claude に貼る。
 
 ## 現在地
 
 - フェーズ: Sprint 0（開発基盤）
-- 現在のタスク: **S0-03**（基本フォルダ構成）— ファイル作成済み（`s0-03.zip`）。ユーザーのローカル確認待ち
-- 次のタスク: S0-04（品質ゲート: typecheck / ESLint / Prettier / Jest）。Jest 等の導入にはネットワークが必要なため、手順を提示してユーザーのローカルで実行する
+- 現在のタスク: **S0-04**（品質ゲート）— 設定ファイル作成済み（`s0-04.zip`）。パッケージ導入と各コマンドの実行はユーザーのローカルで行う（結果待ち）
+- 次のタスク: S0-05（共通UI・テーマ。`src/theme/` とテンプレート由来 `src/constants/theme.ts` の整理を含む）
 
 ## 完了済み
 
@@ -20,6 +20,7 @@
 | 2026-11-08 | S0-00 | 要件レビュー、Q-04/05/06/07/11/15/16 を推奨案で決定、S0-09（CI）追加を承認 |
 | 2026-11-08 | S0-01 | Expo SDK 58 + TS(strict) を直下に配置、expo-doctor 20/20、Metro 起動と Web 表示（Welcome to Expo）を確認、`.nvmrc`(24) 追加 |
 | 2026-11-08 | S0-02 | 5タブ + 詳細画面のスケルトン。`tsc` エラー 0 件、Web で表示確認（ユーザー報告）。Expo Go 実機は未確認 |
+| 2026-11-08 | S0-03 | 基本フォルダ構成。`tsc` 0 件、Web で全タブ表示、コミット `[S0-03] Add base folder structure` |
 | 2026-11-08 | （S0-08 の一部） | CLAUDE.md / ARCHITECTURE.md / SPRINT_BACKLOG.md / PROGRESS.md のドラフト作成 |
 
 ## 決定事項（要点。詳細は ARCHITECTURE.md §11）
@@ -42,15 +43,17 @@
 - テンプレート由来の `AGENTS.md` と `.claude/settings.json` が追跡されている。`CLAUDE.md` との関係（内容の重複・矛盾）を S0-08 で確認する
 - 設計への反映: Expo Router のルートは `src/app/`（ARCHITECTURE §3 と CLAUDE.md を修正済み）
 
-## 次の一手（S0-03 の確認）
+## 次の一手（S0-04 の確認）
 
-`s0-03.zip` を直下に展開（`Expand-Archive s0-03.zip -DestinationPath . -Force`）し、次を実行して結果を Claude に貼る。
+手順は S0-04 の報告メッセージを参照。ユーザーのローカルで実行し、次の結果を Claude に貼る。
 
-1. `git status --short`（`src/features/` などが `??` で出る）
-2. `npx tsc --noEmit`（エラー 0 件のまま）
-3. `npx expo start --web` でこれまでどおり表示されること
+1. パッケージ導入（eslint / eslint-config-expo / prettier / eslint-config-prettier / eslint-plugin-prettier / jest-expo / jest / @types/jest）
+2. `npm run format` 後の `git diff --stat`
+3. `npm run typecheck` / `npm run lint` / `npm run test` の出力
+4. 意図的な失敗（型・lint・テスト）で各コマンドが失敗すること
+5. `npm audit` の出力
 
-受け入れ条件: SPRINT_BACKLOG.md の S0-03 を参照。
+受け入れ条件: SPRINT_BACKLOG.md の S0-04 を参照。
 
 ## 確認結果ログ（ユーザー実行分を貼る）
 
@@ -68,6 +71,9 @@
   - `src/constants/theme.ts`: `@/global.css` の型宣言なし
   - 方針: S0-02 でサンプルを撤去して解消（S0-02 の受け入れ条件に追加済み）
 - `npx expo start`: Metro 起動、QR 表示。`src/app` を Expo Router のルートとして認識、React Compiler 有効。Expo Go での表示確認は未報告
+
+- 2026-11-08 S0-03 確認: `Expand-Archive` で展開、`git status --short`・`npx tsc --noEmit`（0件）・`npx expo start --web`（5タブすべてバンドル成功）。コミット fe5613f（24 files）
+- 補足: テンプレート由来の `scripts/reset-project.js` と `reset-project` スクリプトは、実行すると `src/` を退避・初期化するため危険。S0-04 完了後に削除を提案する
 
 ## 更新ルール
 

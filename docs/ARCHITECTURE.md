@@ -39,8 +39,8 @@
 | Server state | TanStack Query | キャッシュ・再取得・二重送信抑止 |
 | UI state | Zustand | 選択中の子ども等のみ |
 | Backend | Supabase | Postgres / Auth / Storage / Edge Functions |
-| Test | Jest + jest-expo, React Native Testing Library | 承認済（Q-16） |
-| Lint/Format | ESLint, Prettier | 承認済（Q-16） |
+| Test | Jest + jest-expo（SDK 58 は Jest 30 必須）。React Native Testing Library は最初のコンポーネントテストのタスクで導入 | 承認済（Q-16） |
+| Lint/Format | ESLint（eslint-config-expo）+ Prettier（eslint-plugin-prettier で lint に統合） | 承認済（Q-16） |
 
 開発環境: Node v24.12.0 / npm 11.6.2（Windows）。テンプレート初期導入の依存（`@expo/ui`、`expo-glass-effect`、`expo-symbols` など）のうち不要なものの整理は S0-02 以降で提案する。
 

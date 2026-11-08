@@ -41,11 +41,11 @@ SDK・主要ライブラリのバージョンは Sprint 0 で固定し、`docs/A
 
 ## 5. アーキテクチャ規約
 
-- レイヤー: Presentation（`app/`・コンポーネント）→ Application（hooks・ビジネスロジック）→ Data（repository・Supabaseクライアント）→ External Services。依存は上から下の一方向。
+- レイヤー: Presentation（`src/app/`・コンポーネント）→ Application（hooks・ビジネスロジック）→ Data（repository・Supabaseクライアント）→ External Services。依存は上から下の一方向。
 - **UIコンポーネント・画面から Supabase を直接呼ばない。** 必ず repository 経由（hooks から呼ぶ）。
 - OCR・AI は `src/services/` のインターフェース経由で利用し、プロバイダー固有コードを漏らさない（Sprint 3 まで実装しない）。
 - サーバー状態は TanStack Query、UI状態（選択中の子ども等）のみ Zustand。サーバーデータを Zustand に複製しない。
-- `app/` 配下のルートファイルは薄く保ち、ロジックは `src/features/` に置く。
+- `src/app/` 配下のルートファイルは薄く保ち、ロジックは `src/features/` に置く（Expo SDK 58 テンプレートは `src/app/` をルートとして使う）。
 - 共通UIは `src/components/` に集約し、再利用する。色だけで情報を区別しない（文字・アイコンを併用）。
 - 日付は日付文字列（`YYYY-MM-DD`）と時刻を分けて扱い、タイムゾーン変換による日付ずれを起こさない。
 
@@ -81,14 +81,18 @@ SDK・主要ライブラリのバージョンは Sprint 0 で固定し、`docs/A
 - コメントは「なぜ」を書く。要件ID に紐づく重要処理には ID を記載してよい。
 - サンプルデータは `src/dev/` または `supabase/seed.sql` に隔離し、本番データと混ぜない。UI上でも判別できるようにする。
 
-## 10. コマンド（Sprint 0 完了時に確定。確定までは未整備）
+## 10. コマンド（S0-04 で整備。ユーザーのローカル確認後に確定）
 
 ```
 npm run typecheck   # tsc --noEmit
-npm run lint        # eslint
+npm run lint        # expo lint（ESLint + Prettier のチェック）
 npm run test        # jest (jest-expo)
+npm run format      # prettier --write（整形。機能変更と別コミットにする）
+npm run check       # typecheck + lint + test
 npm run start       # expo start
 ```
+
+注意: `npm audit fix --force` は実行しない（メジャー更新で SDK の整合性が崩れる）。
 
 各タスク完了前に `typecheck` / `lint` / `test` を実行する。実行できない環境の場合はその旨と代替確認方法を報告する。
 
