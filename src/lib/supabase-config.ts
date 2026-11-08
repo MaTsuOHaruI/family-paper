@@ -17,7 +17,8 @@ export class SupabaseConfigError extends Error {
 
 const URL_VAR = 'EXPO_PUBLIC_SUPABASE_URL';
 const KEY_VAR = 'EXPO_PUBLIC_SUPABASE_ANON_KEY';
-const SETUP_HINT = '.env.example を .env にコピーして値を設定し、開発サーバーを再起動してください。';
+const SETUP_HINT =
+  '.env.example を .env にコピーして値を設定し、開発サーバーを再起動してください。';
 
 const BASE64_CHARS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/';
 
@@ -62,7 +63,9 @@ function jwtRole(key: string): string | null {
 function requireValue(name: string, raw: string | undefined): string {
   const value = raw?.trim() ?? '';
   if (value === '') {
-    throw new SupabaseConfigError(`Supabase の設定がありません: ${name} が未設定です。${SETUP_HINT}`);
+    throw new SupabaseConfigError(
+      `Supabase の設定がありません: ${name} が未設定です。${SETUP_HINT}`,
+    );
   }
   if (value.includes('YOUR_')) {
     throw new SupabaseConfigError(

@@ -4,8 +4,7 @@ import { SupabaseConfigError, readSupabaseConfig } from '@/lib/supabase-config';
 
 const URL = 'https://abcdefghijklmnop.supabase.co';
 // 署名はダミー。ペイロードの role だけが検証の対象。
-const ANON_JWT =
-  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiYW5vbiJ9.signature';
+const ANON_JWT = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiYW5vbiJ9.signature';
 const SERVICE_ROLE_JWT =
   'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoic2VydmljZV9yb2xlIn0.signature';
 const PUBLISHABLE_KEY = 'sb_publishable_dummyvalue1234567890';
@@ -47,7 +46,9 @@ describe('readSupabaseConfig（SEC-004）', () => {
   it.each(['not a url', 'ftp://example.com', 'https://', 'supabase.co'])(
     'URL の形式が不正（%s）ならエラー',
     (url) => {
-      expect(() => readSupabaseConfig({ url, anonKey: ANON_JWT })).toThrow(/形式が正しくありません/);
+      expect(() => readSupabaseConfig({ url, anonKey: ANON_JWT })).toThrow(
+        /形式が正しくありません/,
+      );
     },
   );
 
