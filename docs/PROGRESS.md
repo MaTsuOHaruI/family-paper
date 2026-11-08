@@ -104,6 +104,8 @@
 - S0-06 で未確認: `createClient` の実行時動作（環境変数を設定した状態での起動）、React Native での URL polyfill の要否 → S1A-02 で確認
 - 注意: `.gitignore` の LF/CRLF 警告（`CRLF will be replaced by LF`）は `.gitattributes` により無害
 
+- 2026-11-08 S0-07: `npx expo install @tanstack/react-query zustand` 成功（3 packages。`@tanstack/react-query` ^5.107.1 / `zustand` ^5.1.0）。コミット af2ee06。`npm run format` は変更なし。`npm run check` の `typecheck` で 17 件のエラー（新規 2 テストの `describe` / `it` / `expect` / `beforeEach` が未定義）。原因: 既存テストと同じ `import … from '@jest/globals'` を書き忘れた（Claude のミス）。対応: 2 ファイルに import を追加（`s0-07b.zip`）。`npx expo start --web`: 全タブ・予定詳細のバンドル成功、エラーなし（画面の目視は未報告）
+
 ## 更新ルール
 
 - 各タスクの終了時に「現在地」「完了済み」「未解決」「次の一手」「確認結果ログ」を更新する。

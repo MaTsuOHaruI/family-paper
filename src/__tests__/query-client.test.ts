@@ -1,3 +1,5 @@
+import { describe, expect, it } from '@jest/globals';
+
 import { createQueryClient } from '@/lib/query-client';
 
 describe('createQueryClient', () => {
