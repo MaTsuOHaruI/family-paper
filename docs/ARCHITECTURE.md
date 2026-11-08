@@ -10,7 +10,7 @@
 ┌────────────────────────────────────────────┐
 │ Mobile App (Expo / React Native / TS)      │
 │                                            │
-│  Presentation   app/ (Expo Router), UI     │
+│  Presentation   src/app/ (Expo Router), UI │
 │        │                                   │
 │  Application    hooks, ビジネスロジック      │
 │        │          TanStack Query / Zustand  │
@@ -33,32 +33,34 @@
 
 | 領域 | 採用 | 備考 |
 |---|---|---|
-| Framework | Expo + React Native | SDKバージョンは Sprint 0 で固定（S0-01） |
-| Language | TypeScript (strict) | |
-| Routing | Expo Router | ファイルベース |
+| Framework | Expo SDK 58 + React Native | expo ~58.0.23 / react-native 0.88.1 / react 19.3.0。版は `package-lock.json` で固定（2026-11-08 時点） |
+| Language | TypeScript (strict) | typescript ~6.0.3、`tsconfig` は `strict: true`、パスエイリアス `@/*` → `src/*` |
+| Routing | Expo Router | expo-router ~58.0.30。ルートは `src/app/`。ファイルベース |
 | Server state | TanStack Query | キャッシュ・再取得・二重送信抑止 |
 | UI state | Zustand | 選択中の子ども等のみ |
 | Backend | Supabase | Postgres / Auth / Storage / Edge Functions |
 | Test | Jest + jest-expo, React Native Testing Library | 承認済（Q-16） |
 | Lint/Format | ESLint, Prettier | 承認済（Q-16） |
 
+開発環境: Node v24.12.0 / npm 11.6.2（Windows）。テンプレート初期導入の依存（`@expo/ui`、`expo-glass-effect`、`expo-symbols` など）のうち不要なものの整理は S0-02 以降で提案する。
+
 追加ライブラリ（カレンダーUI、画像ピッカー、セッション保存等）は必要になったタスクで提案し、承認を得てから導入する。
 
 ## 3. ディレクトリ構成（案）
 
 ```
-app/                         # ルートのみ（薄く保つ）
-  _layout.tsx
-  (tabs)/
-    _layout.tsx
-    index.tsx                # SCR-001 ホーム
-    calendar.tsx             # SCR-002
-    documents.tsx            # SCR-003
-    add-document.tsx         # SCR-004（Q-05: 中央タブ案）
-    family.tsx               # SCR-007
-  documents/[id].tsx         # SCR-005
-  events/[id].tsx            # SCR-006
 src/
+  app/                       # Expo Router のルート（薄く保つ。SDK 58 テンプレートの標準位置）
+    _layout.tsx
+    (tabs)/
+      _layout.tsx
+      index.tsx              # SCR-001 ホーム
+      calendar.tsx           # SCR-002
+      documents.tsx          # SCR-003
+      add-document.tsx       # SCR-004（Q-05: 中央タブ）
+      family.tsx             # SCR-007
+    documents/[id].tsx       # SCR-005
+    events/[id].tsx          # SCR-006
   components/                # 共通UI
   features/
     auth/ children/ documents/ events/ extraction/
@@ -80,6 +82,14 @@ supabase/
 docs/
   REQUIREMENTS.md  ARCHITECTURE.md  SPRINT_BACKLOG.md
 ```
+
+### 3.1 作成状況（S0-03 時点）
+
+- 作成済み（空ディレクトリは `.gitkeep` で保持。中身を置いたら該当の `.gitkeep` は削除してよい）:
+  `src/features/{auth,children,documents,events,extraction}/{components,hooks,repository}`、`src/lib`、`src/services/{ocr,extraction}`、`src/store`、`src/utils`、`src/dev`、`src/types`
+- `types.ts`（各 feature）は、型が必要になったタスクで追加する（空ファイルは作らない）。
+- 未作成（担当タスクで作る）: `src/theme/`（S0-05）、`supabase/`（S0-06）。
+- テンプレート由来で ARCHITECTURE §3 の構成にないもの: `src/constants/theme.ts`、`src/hooks/`（use-color-scheme / use-theme）、`src/components/themed-text.tsx` / `themed-view.tsx`、`src/global.css`。`src/theme/` との統合・整理は S0-05 で提案する（それまで移動・削除しない）。
 
 ## 4. レイヤー規約
 

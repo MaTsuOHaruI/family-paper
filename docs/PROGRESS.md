@@ -3,15 +3,15 @@
 作業の再開時は、まず `CLAUDE.md` → 本ファイル → `docs/SPRINT_BACKLOG.md` の順に読む。
 状態の正はリポジトリ（本ファイルとバックログ）であり、チャットの記憶ではない。
 
-- 最終更新: 2026-11-08
+- 最終更新: 2026-11-08（S0-03 作成時）
 - 運用: GitHub への反映はユーザーが行う。Claude はチャット上でファイルを作成・更新して渡す。
 - 制約: Claude のチャット環境ではパッケージ導入・`tsc`・`expo` が実行できない（ネットワーク無効）。確認コマンドはユーザーのローカルまたは CI（S0-09）で実行し、出力を Claude に貼る。
 
 ## 現在地
 
 - フェーズ: Sprint 0（開発基盤）
-- 現在のタスク: **S0-02**（Expo Router・5タブ骨組み）— ファイル作成済み（`s0-02.zip`）。`tsc` / Web 表示はユーザーのローカル確認待ち（Claude 環境では未実行）
-- 次のタスク: S0-02（Expo Router・5タブ骨組み）
+- 現在のタスク: **S0-03**（基本フォルダ構成）— ファイル作成済み（`s0-03.zip`）。ユーザーのローカル確認待ち
+- 次のタスク: S0-04（品質ゲート: typecheck / ESLint / Prettier / Jest）。Jest 等の導入にはネットワークが必要なため、手順を提示してユーザーのローカルで実行する
 
 ## 完了済み
 
@@ -19,6 +19,7 @@
 |---|---|---|
 | 2026-11-08 | S0-00 | 要件レビュー、Q-04/05/06/07/11/15/16 を推奨案で決定、S0-09（CI）追加を承認 |
 | 2026-11-08 | S0-01 | Expo SDK 58 + TS(strict) を直下に配置、expo-doctor 20/20、Metro 起動と Web 表示（Welcome to Expo）を確認、`.nvmrc`(24) 追加 |
+| 2026-11-08 | S0-02 | 5タブ + 詳細画面のスケルトン。`tsc` エラー 0 件、Web で表示確認（ユーザー報告）。Expo Go 実機は未確認 |
 | 2026-11-08 | （S0-08 の一部） | CLAUDE.md / ARCHITECTURE.md / SPRINT_BACKLOG.md / PROGRESS.md のドラフト作成 |
 
 ## 決定事項（要点。詳細は ARCHITECTURE.md §11）
@@ -41,17 +42,15 @@
 - テンプレート由来の `AGENTS.md` と `.claude/settings.json` が追跡されている。`CLAUDE.md` との関係（内容の重複・矛盾）を S0-08 で確認する
 - 設計への反映: Expo Router のルートは `src/app/`（ARCHITECTURE §3 と CLAUDE.md を修正済み）
 
-## 次の一手（S0-02 の確認）
+## 次の一手（S0-03 の確認）
 
-S0-02 のファイル一式（`s0-02.zip`）を適用し、ユーザーのローカルで次を実行して結果を Claude に貼る。
+`s0-03.zip` を直下に展開（`Expand-Archive s0-03.zip -DestinationPath . -Force`）し、次を実行して結果を Claude に貼る。
 
-1. 不要なテンプレートファイルを `git rm` で削除し、`s0-02.zip` を直下に展開
-2. `npx expo start --web`（ルート型が再生成される）→ いったん停止
-3. `npx tsc --noEmit`（エラー 0 件が目標）
-4. Web で 5 タブの遷移、書類詳細・予定詳細への遷移と戻る操作を確認
-5. 可能なら Expo Go でも確認（Q-11: 実機確認はユーザー作業）
+1. `git status --short`（`src/features/` などが `??` で出る）
+2. `npx tsc --noEmit`（エラー 0 件のまま）
+3. `npx expo start --web` でこれまでどおり表示されること
 
-受け入れ条件: SPRINT_BACKLOG.md の S0-02 を参照。
+受け入れ条件: SPRINT_BACKLOG.md の S0-03 を参照。
 
 ## 確認結果ログ（ユーザー実行分を貼る）
 

@@ -25,8 +25,8 @@
 |---|---|---|---|---|
 | S0-00 | 要件レビューと未決事項の決定（Q-04/05/06/07/11/15/16） | §14 | S | ☑ 2026-11-08 |
 | S0-01 | 既存リポジトリの確認、Expo + RN + TS(strict) プロジェクト準備、SDK/Node バージョン固定 | NFR-004, NFR-005, §3.1 | M | ☑ 2026-11-08（Web 表示確認済み。Expo Go 実機は S0-02 で確認） |
-| S0-02 | Expo Router 設定、5タブ + 詳細画面（SCR-001〜007）の空スケルトン | §5, §3.3 | M | ◐（実装済み・ユーザー確認待ち） |
-| S0-03 | 基本フォルダ構成の作成（ARCHITECTURE §3） | §3.2, NFR-004 | S | ☐ |
+| S0-02 | Expo Router 設定、5タブ + 詳細画面（SCR-001〜007）の空スケルトン | §5, §3.3 | M | ☑ 2026-11-08（tsc 0件、Web で表示確認。Expo Go 実機は未確認） |
+| S0-03 | 基本フォルダ構成の作成（ARCHITECTURE §3） | §3.2, NFR-004 | S | ◐（作成済み・ユーザー確認待ち） |
 | S0-04 | 品質ゲート: typecheck / ESLint / Prettier / Jest スモークテスト / npm scripts | 規則7, NFR-004 | M | ☐ |
 | S0-05 | 共通UI・テーマ: カラー、Screen / Text / Button / EmptyState、子ども色トークン | §3.2, NFR-001, FR-047(基盤) | M | ☐ |
 | S0-06 | Supabase 準備: `lib/supabase.ts`、`.env.example`、`.gitignore`、`supabase/` ディレクトリ（テーブル作成なし） | SEC-004, §3.2 | M | ☐ |
@@ -52,7 +52,8 @@
 
 **S0-03**
 - ARCHITECTURE §3 の構成が存在し、`src/app/` にロジックを書かない方針が README/CLAUDE.md に記載されている。
-- パスエイリアス（例 `@/`）が typecheck と実行時の両方で機能する。
+- パスエイリアス（例 `@/`）が typecheck と実行時の両方で機能する（S0-02 で `@/components/...` `@/constants/...` の import が `tsc` 0件・Metro ビルド成功を確認済み）。
+- `src/theme/` と `supabase/` はこのタスクでは作らない（それぞれ S0-05 / S0-06 で作成）。
 
 **S0-04**
 - 3つのコマンドが成功する。サンプルテスト1件以上が通る。
