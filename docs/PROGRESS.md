@@ -3,14 +3,14 @@
 作業の再開時は、まず `CLAUDE.md` → 本ファイル → `docs/SPRINT_BACKLOG.md` の順に読む。
 状態の正はリポジトリ（本ファイルとバックログ）であり、チャットの記憶ではない。
 
-- 最終更新: 2026-11-08（S0-05 作成時）
+- 最終更新: 2026-11-08（S0-05 完了）
 - 運用: GitHub への反映はユーザーが行う。Claude はチャット上でファイルを作成・更新して渡す。
 - 制約: Claude のチャット環境ではパッケージ導入・`tsc`・`expo` が実行できない（ネットワーク無効）。確認コマンドはユーザーのローカルまたは CI（S0-09）で実行し、出力を Claude に貼る。
 
 ## 現在地
 
 - フェーズ: Sprint 0（開発基盤）
-- 現在のタスク: **S0-05**（共通UI・テーマ）— コミット済み（5462962, f06635d）。`tsc` の型エラー 5 件（タブアイコンの `color` の型）を修正中（`s0-05b.zip`）。`npm run check` の再実行と画面確認が残り
+- 現在のタスク: S0-05 完了。S0-06（Supabase 準備）は方針（ライブラリ導入）のユーザー承認待ち
 - 次のタスク: S0-06（Supabase 準備。テーブルなし）。S0-09（CI）は品質ゲートが整ったので S0-06 の前後どちらでも可
 
 ## 完了済み
@@ -22,6 +22,7 @@
 | 2026-11-08 | S0-02 | 5タブ + 詳細画面のスケルトン。`tsc` エラー 0 件、Web で表示確認（ユーザー報告）。Expo Go 実機は未確認 |
 | 2026-11-08 | S0-03 | 基本フォルダ構成。`tsc` 0 件、Web で全タブ表示、コミット `[S0-03] Add base folder structure` |
 | 2026-11-08 | S0-04 | `npm run check`（typecheck / lint / test）成功。型・整形・テストの失敗確認済み。ESLint + Prettier（lint 統合）/ Jest 30 + jest-expo / `.gitattributes`（LF）。コミット d607981, 646b7bb ほか |
+| 2026-11-08 | S0-05 | `src/theme/`（色・余白・文字・子ども 6 色 + 色なし）、`Screen` / `AppText` / `Button` / `EmptyState`、タブアイコン（Ionicons）、コントラスト比のテスト。`npm run check` 成功（23 tests）。Web でアイコン・選択色・ダークモード・詳細画面への遷移を確認 |
 | 2026-11-08 | （S0-08 の一部） | CLAUDE.md / ARCHITECTURE.md / SPRINT_BACKLOG.md / PROGRESS.md のドラフト作成 |
 
 ## 決定事項（要点。詳細は ARCHITECTURE.md §11）
@@ -46,16 +47,9 @@
 - テンプレート由来の `AGENTS.md` と `.claude/settings.json` が追跡されている。`CLAUDE.md` との関係（内容の重複・矛盾）を S0-08 で確認する
 - 設計への反映: Expo Router のルートは `src/app/`（ARCHITECTURE §3 と CLAUDE.md を修正済み）
 
-## 次の一手（S0-05 の確認）
+## 次の一手（S0-06）
 
-手順は S0-05 の報告メッセージを参照。実行後、次を Claude に貼る。
-
-1. `npx expo install @expo/vector-icons` の結果
-2. テンプレート由来ファイルの `git rm`、`s0-05.zip` 展開
-3. `npm run format` の `git diff --stat`、`npm run check` の出力
-4. Web（可能なら Expo Go も）で 5 タブのアイコン表示、ライト/ダーク切り替え、詳細画面への遷移
-
-受け入れ条件: SPRINT_BACKLOG.md の S0-05 を参照。
+方針の承認後に着手する。内容: `@supabase/supabase-js` の導入、`src/lib/supabase.ts`（環境変数未設定時に分かりやすいエラー）、`.env.example`、`.gitignore` の確認、`supabase/` ディレクトリ（`migrations/` と `functions/` のみ。テーブル・RLS は S1A-01）。セッション保存方式は S1A-02 で決める。
 
 ## 確認結果ログ（ユーザー実行分を貼る）
 
@@ -96,6 +90,9 @@
 - 2026-11-08 S0-05: `git rm`（テンプレート由来 8 ファイル）、`s0-05.zip` 展開、コミット 5462962。`npm run format` は `src/app/(tabs)/_layout.tsx` のみ変更 → コミット f06635d
 - `npm run check`: `typecheck` で 5 件のエラー（すべて `src/app/(tabs)/_layout.tsx`、`tabBarIcon` に渡した関数の引数 `color: string` が React Navigation の `ColorValue` と不一致）。lint・test は未実行（typecheck で停止）。対応: 引数の型を `ColorValue`（react-native）に変更
 - `npx expo start --web`: 全タブ・書類詳細のバンドル成功（エラーなし）。アイコン表示とダークモードの見た目は未報告
+
+- 2026-11-08 S0-05 完了: 型エラーはタブアイコンの `color`（`ColorValue` が `number` / `null` を含み `Ionicons` と不一致）を、`focused` とテーマのトークンから色を決める形に変更して解消（コミット e2799b6 の後、`s0-05d.zip`）。`npm run check`: typecheck 0 件、lint 警告 1 件（`@typescript-eslint/array-type`、theme.test.ts:30）→ `T[]` 形式へ修正、test 23 件成功。Web: 5 タブのアイコン、選択中のタブのみ青系、ダークモード切替、書類・カレンダーから詳細画面へ遷移して戻れることをユーザーが確認
+- 未確認: Expo Go（実機）での表示。Q-11 に従いユーザー確認待ちとして残す
 
 ## 更新ルール
 

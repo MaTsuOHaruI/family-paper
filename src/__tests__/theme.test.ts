@@ -27,7 +27,7 @@ function contrast(a: string, b: string): number {
 const schemes: ColorScheme[] = ['light', 'dark'];
 
 // 文字色と、その文字を載せる背景色の組み合わせ（実際に画面で使うもの）
-const textPairs: Array<[keyof ThemeColors, keyof ThemeColors]> = [
+const textPairs: [keyof ThemeColors, keyof ThemeColors][] = [
   ['text', 'background'],
   ['text', 'surface'],
   ['textSecondary', 'background'],
