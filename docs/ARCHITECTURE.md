@@ -88,8 +88,18 @@ docs/
 - 作成済み（空ディレクトリは `.gitkeep` で保持。中身を置いたら該当の `.gitkeep` は削除してよい）:
   `src/features/{auth,children,documents,events,extraction}/{components,hooks,repository}`、`src/lib`、`src/services/{ocr,extraction}`、`src/store`、`src/utils`、`src/dev`、`src/types`
 - `types.ts`（各 feature）は、型が必要になったタスクで追加する（空ファイルは作らない）。
-- 未作成（担当タスクで作る）: `src/theme/`（S0-05）、`supabase/`（S0-06）。
-- テンプレート由来で ARCHITECTURE §3 の構成にないもの: `src/constants/theme.ts`、`src/hooks/`（use-color-scheme / use-theme）、`src/components/themed-text.tsx` / `themed-view.tsx`、`src/global.css`。`src/theme/` との統合・整理は S0-05 で提案する（それまで移動・削除しない）。
+- 作成済み（S0-05）: `src/theme/`（`colors.ts` / `child-colors.ts` / `tokens.ts` / `use-color-scheme(.web).ts` / `index.ts`）。
+- 未作成（担当タスクで作る）: `supabase/`（S0-06）。
+- テンプレート由来の `src/constants/theme.ts`、`src/hooks/`、`themed-text.tsx` / `themed-view.tsx`、`src/global.css`、`src/types/css.d.ts` は S0-05 で `src/theme/` に統合し削除した。未使用のテンプレート画像（`assets/images/tabIcons`、`expo-badge*`、`react-logo*`、`tutorial-web.png`、`assets/expo.icon` など）は S0-08 で整理を提案する。
+
+### 3.2 テーマ・共通UI（S0-05）
+
+- 色・余白・文字サイズ・タップ領域は `@/theme` のトークンを使い、画面・部品にハードコードしない。配色はライト/ダーク対応。
+- 配色は中立色基調の仮のもの。ブランドカラーが決まれば `src/theme/colors.ts` だけを変更する。
+- 文字と背景の組み合わせは WCAG AA（4.5:1）以上、子どもの表示色は背景に対して 3:1 以上を、`src/__tests__/theme.test.ts` で自動検証する（NFR-001）。
+- 子どもの表示色（FR-010 / FR-047）: 6 色のプリセット（赤・オレンジ・緑・青・紫・ピンク）+ 「色なし」。色だけで区別せず、文字ラベル（`label`）を併用する。**`children.color` にはキー（例 `blue`）を保存し、色値はテーマ側で解決する**（提案。S1A-03 で確定）。
+- 共通部品（`src/components/`）: `Screen`（背景・余白・最大幅）、`AppText`（title / heading / body / caption）、`Button`（primary / secondary / danger、最小タップ領域 48）、`EmptyState`。`PlaceholderScreen` は S0-02 のスタブで、実画面の実装タスクで置き換える。
+- タブのアイコンは `@expo/vector-icons`（Ionicons）。
 
 ## 4. レイヤー規約
 

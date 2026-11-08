@@ -1,7 +1,9 @@
 import { Link, type Href } from 'expo-router';
-import { ScrollView, StyleSheet, Text, View, useColorScheme } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 
-import { Colors, Spacing } from '@/constants/theme';
+import { AppText } from '@/components/app-text';
+import { Screen } from '@/components/screen';
+import { MIN_TOUCH_TARGET, Radius, Spacing, useAppTheme } from '@/theme';
 
 export type PlaceholderLink = { label: string; href: Href };
 
@@ -15,69 +17,45 @@ type Props = {
 };
 
 /**
- * S0-02 用の一時的なスケルトン表示（スタブ）。
- * 実データ・実機能は持たない。S0-05 の共通UIで置き換えを検討する。
+ * S0-02 用の一時的なスケルトン表示（スタブ）。実データ・実機能は持たない。
+ * 各画面の実装タスクで、items の項目を実UIへ置き換えていく。
  */
 export function PlaceholderScreen({ scrId, title, items, links }: Props) {
-  const scheme = useColorScheme();
-  const colors = Colors[scheme === 'dark' ? 'dark' : 'light'];
+  const { colors } = useAppTheme();
 
   return (
-    <ScrollView
-      style={{ backgroundColor: colors.background }}
-      contentContainerStyle={styles.content}>
-      <Text style={[styles.badge, { color: colors.textSecondary }]}>
+    <Screen>
+      <AppText variant="caption" tone="secondary">
         {scrId}（未実装のプレースホルダ）
-      </Text>
-      <Text accessibilityRole="header" style={[styles.title, { color: colors.text }]}>
-        {title}
-      </Text>
+      </AppText>
+      <AppText variant="title">{title}</AppText>
       <View style={styles.list}>
         {items.map((item) => (
-          <Text
-            key={item}
-            style={[
-              styles.item,
-              { color: colors.text, backgroundColor: colors.backgroundElement },
-            ]}>
+          <AppText key={item} style={[styles.item, { backgroundColor: colors.surface }]}>
             {item}
-          </Text>
+          </AppText>
         ))}
       </View>
       {links?.map((link) => (
-        <Link key={link.label} href={link.href} style={[styles.link, { color: colors.text }]}>
+        <Link key={link.label} href={link.href} style={[styles.link, { color: colors.primary }]}>
           {link.label}
         </Link>
       ))}
-    </ScrollView>
+    </Screen>
   );
 }
 
 const styles = StyleSheet.create({
-  content: {
-    padding: Spacing.three,
-    gap: Spacing.three,
-  },
-  badge: {
-    fontSize: 13,
-  },
-  title: {
-    fontSize: 24,
-    fontWeight: '700',
-  },
-  list: {
-    gap: Spacing.two,
-  },
+  list: { gap: Spacing.sm },
   item: {
-    fontSize: 16,
-    paddingVertical: Spacing.two,
-    paddingHorizontal: Spacing.three,
-    borderRadius: Spacing.two,
+    paddingVertical: Spacing.sm,
+    paddingHorizontal: Spacing.md,
+    borderRadius: Radius.sm,
     overflow: 'hidden',
   },
   link: {
-    fontSize: 16,
+    minHeight: MIN_TOUCH_TARGET,
+    paddingVertical: Spacing.sm,
     textDecorationLine: 'underline',
-    paddingVertical: Spacing.two,
   },
 });
