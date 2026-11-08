@@ -8,6 +8,9 @@ export function useColorScheme() {
   const [hasHydrated, setHasHydrated] = useState(false);
 
   useEffect(() => {
+    // Web の静的レンダリング（SSR）と水和後の値を一致させる標準パターン。
+    // マウント時に1回だけ更新するため、連鎖レンダリングの問題はない（テンプレート由来）。
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setHasHydrated(true);
   }, []);
 

@@ -77,6 +77,7 @@ SDK・主要ライブラリのバージョンは Sprint 0 で固定し、`docs/A
 - TypeScript strict。`any` と `@ts-ignore` は原則禁止（使う場合は理由コメントと報告）。
 - 外部入力・DB応答は型定義し、境界で検証する。
 - ESLint / Prettier の設定に従う。フォーマットだけの変更を機能変更に混ぜない。
+- 改行コードは LF（`.gitattributes` で強制）。Windows の PowerShell で `Set-Content` により日本語を含むファイルを書き換えない（文字化け・CRLF 混入の原因）。
 - コンポーネントは小さく保ち、ファイル名は役割が分かる名前にする（PascalCase コンポーネント、camelCase hooks/関数）。
 - コメントは「なぜ」を書く。要件ID に紐づく重要処理には ID を記載してよい。
 - サンプルデータは `src/dev/` または `supabase/seed.sql` に隔離し、本番データと混ぜない。UI上でも判別できるようにする。

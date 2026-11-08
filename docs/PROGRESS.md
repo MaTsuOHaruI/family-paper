@@ -3,14 +3,14 @@
 作業の再開時は、まず `CLAUDE.md` → 本ファイル → `docs/SPRINT_BACKLOG.md` の順に読む。
 状態の正はリポジトリ（本ファイルとバックログ）であり、チャットの記憶ではない。
 
-- 最終更新: 2026-11-08（S0-04 作成時）
+- 最終更新: 2026-11-08（S0-04 実行結果の反映）
 - 運用: GitHub への反映はユーザーが行う。Claude はチャット上でファイルを作成・更新して渡す。
 - 制約: Claude のチャット環境ではパッケージ導入・`tsc`・`expo` が実行できない（ネットワーク無効）。確認コマンドはユーザーのローカルまたは CI（S0-09）で実行し、出力を Claude に貼る。
 
 ## 現在地
 
 - フェーズ: Sprint 0（開発基盤）
-- 現在のタスク: **S0-04**（品質ゲート）— 設定ファイル作成済み（`s0-04.zip`）。パッケージ導入と各コマンドの実行はユーザーのローカルで行う（結果待ち）
+- 現在のタスク: **S0-04**（品質ゲート）— `typecheck` / `test` 成功、テンプレート由来の lint エラーは修正済み。改行コード（CRLF 混入）の対策として `.gitattributes` を追加中（`s0-04c.zip`）。失敗確認の再実施と `npm audit --omit=dev` の記録が残り
 - 次のタスク: S0-05（共通UI・テーマ。`src/theme/` とテンプレート由来 `src/constants/theme.ts` の整理を含む）
 
 ## 完了済み
@@ -40,18 +40,15 @@
 - Q-15: 開発用 Supabase クラウドプロジェクトの作成（ユーザー作業、S1A-01 前まで）
 - S0-01: 画面表示は確認済み（Welcome to Expo）。実機（Expo Go）で見たかは未確認
 - テンプレート由来の依存（`@expo/ui`、`expo-glass-effect` 等）の整理は S0-02 以降で提案
+- `npm audit` 31 件（開発ツール由来）。`--force` は使わない。S4-04 で再評価（詳細は確認結果ログ）
 - テンプレート由来の `AGENTS.md` と `.claude/settings.json` が追跡されている。`CLAUDE.md` との関係（内容の重複・矛盾）を S0-08 で確認する
 - 設計への反映: Expo Router のルートは `src/app/`（ARCHITECTURE §3 と CLAUDE.md を修正済み）
 
-## 次の一手（S0-04 の確認）
+## 次の一手（S0-04 の残り）
 
-手順は S0-04 の報告メッセージを参照。ユーザーのローカルで実行し、次の結果を Claude に貼る。
-
-1. パッケージ導入（eslint / eslint-config-expo / prettier / eslint-config-prettier / eslint-plugin-prettier / jest-expo / jest / @types/jest）
-2. `npm run format` 後の `git diff --stat`
-3. `npm run typecheck` / `npm run lint` / `npm run test` の出力
-4. 意図的な失敗（型・lint・テスト）で各コマンドが失敗すること
-5. `npm audit` の出力
+1. `s0-04c.zip` を展開し、`git add --renormalize .` → `npm run format` → `npm run lint` が 0 件になること
+3. 失敗確認のやり直し（型・lint・テスト。ASCII のみの一時ファイルを使う）
+4. `npm audit --omit=dev` と `Get-Content package.json`（導入バージョンの記録）
 
 受け入れ条件: SPRINT_BACKLOG.md の S0-04 を参照。
 
@@ -74,6 +71,16 @@
 
 - 2026-11-08 S0-03 確認: `Expand-Archive` で展開、`git status --short`・`npx tsc --noEmit`（0件）・`npx expo start --web`（5タブすべてバンドル成功）。コミット fe5613f（24 files）
 - 補足: テンプレート由来の `scripts/reset-project.js` と `reset-project` スクリプトは、実行すると `src/` を退避・初期化するため危険。S0-04 完了後に削除を提案する
+
+- 2026-11-08 S0-04 実行: `npx expo install ...` 成功（768 packages 追加、eslint 9.39.5）。最初の `package.json` は scripts の閉じ括弧後のカンマ漏れで JSON エラー（手動貼り付けのミス）→ 修正して再コミット済み
+- コミット: 6bca093 / ac6f111（設定追加）、7459afe（Prettier 整形。`family.tsx` と `placeholder-screen.tsx` のみ変更）
+- `npm run typecheck`: エラー 0 件 / `npm run test`: 1 suite・1 test 成功（jest-expo、Node 24）
+- `npm run lint`: 1 件のエラー。`src/hooks/use-color-scheme.web.ts` 11:5 `react-hooks/set-state-in-effect`（テンプレート由来の水和パターン）。対応: 理由付きの `eslint-disable-next-line` を追加（`s0-04b.zip`）
+- 失敗確認は未完了: コマンドが連結して貼り付けられ `_probe.ts` が作られず、テスト失敗の確認も実行されなかった。また `Set-Content`（既定の文字コード）で日本語を含む `smoke.test.ts` を書き換えた可能性があり、` M src/__tests__/smoke.test.ts` が残った → `git checkout` で戻す。今後、日本語を含むファイルを PowerShell の `Set-Content` で書き換えない
+- `npm audit`: 31 件（low 1 / moderate 30）。導入前は 5 件。いずれも開発ツールの依存（jest 系・eslint 系・`@expo/cli` の `glob` / `minimatch` / `deepmerge` など）。提案される `npm audit fix --force` は `expo@52.0.49`（破壊的変更・ダウングレード）なので実行しない
+- 方針案: 実行時に端末へ入る依存かどうかを `npm audit --omit=dev` で確認し、開発ツール由来は SDK 更新時に解消する。Sprint 4 のセキュリティ確認（S4-04）で再評価する
+
+- 2026-11-08 `s0-04b.zip` 適用後の `npm run lint`: `smoke.test.ts` のみ 9 件（`prettier/prettier` Delete `␍`）。原因は `git checkout` による CRLF 変換（Windows の autocrlf）。他ファイルはエラーなし（`use-color-scheme.web.ts` の件は解消）。対応: `.gitattributes`（`* text=auto eol=lf`）を追加
 
 ## 更新ルール
 
