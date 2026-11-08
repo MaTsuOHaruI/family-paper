@@ -3,15 +3,15 @@
 作業の再開時は、まず `CLAUDE.md` → 本ファイル → `docs/SPRINT_BACKLOG.md` の順に読む。
 状態の正はリポジトリ（本ファイルとバックログ）であり、チャットの記憶ではない。
 
-- 最終更新: 2026-11-08（S0-06 作成時）
+- 最終更新: 2026-11-08（S0-06 完了時）
 - 運用: GitHub への反映はユーザーが行う。Claude はチャット上でファイルを作成・更新して渡す。
 - 制約: Claude のチャット環境ではパッケージ導入・`tsc`・`expo` が実行できない（ネットワーク無効）。確認コマンドはユーザーのローカルまたは CI（S0-09）で実行し、出力を Claude に貼る。
 
 ## 現在地
 
 - フェーズ: Sprint 0（開発基盤）
-- 現在のタスク: **S0-06**（Supabase 準備）— ファイル作成済み（`s0-06.zip`）。`@supabase/supabase-js` の導入、`.gitignore` の追記、各コマンドの実行はユーザーのローカルで行う（結果待ち）
-- 次のタスク: S0-07（QueryClient と Zustand）→ S0-09（CI）→ S0-08（README 等）→ S0-10（Sprint 0 レビュー）
+- 現在のタスク: **S0-07**（QueryClient と Zustand）— ファイル作成済み（`s0-07.zip`）。ライブラリ導入と `npm run check` はユーザーのローカルで実行（結果待ち。導入承認済み）
+- 次のタスク: S0-07（QueryClient と Zustand。TanStack Query / Zustand の導入承認が必要）→ S0-09（CI）→ S0-08（README 等）→ S0-10（Sprint 0 レビュー）
 
 ## 完了済み
 
@@ -23,6 +23,7 @@
 | 2026-11-08 | S0-03 | 基本フォルダ構成。`tsc` 0 件、Web で全タブ表示、コミット `[S0-03] Add base folder structure` |
 | 2026-11-08 | S0-04 | `npm run check`（typecheck / lint / test）成功。型・整形・テストの失敗確認済み。ESLint + Prettier（lint 統合）/ Jest 30 + jest-expo / `.gitattributes`（LF）。コミット d607981, 646b7bb ほか |
 | 2026-11-08 | S0-05 | `src/theme/`（色・余白・文字・子ども 6 色 + 色なし）、`Screen` / `AppText` / `Button` / `EmptyState`、タブアイコン（Ionicons）、コントラスト比のテスト。`npm run check` 成功（23 tests）。Web でアイコン・選択色・ダークモード・詳細画面への遷移を確認 |
+| 2026-11-08 | S0-06 | `src/lib/supabase.ts`（遅延生成の `getSupabaseClient()`）、`supabase-config.ts`（環境変数検証。`service_role` / `sb_secret_` を通信前に拒否）、`.env.example`、`supabase/`、`.gitignore` 追記。`npm run check` 成功（40 tests）。`git check-ignore` で `.env` / `.env.local` は除外、`.env.example` は追跡を確認。コミット 4ce91f9, f4b5363 |
 | 2026-11-08 | （S0-08 の一部） | CLAUDE.md / ARCHITECTURE.md / SPRINT_BACKLOG.md / PROGRESS.md のドラフト作成 |
 
 ## 決定事項（要点。詳細は ARCHITECTURE.md §11）
@@ -48,13 +49,11 @@
 - テンプレート由来の `AGENTS.md` と `.claude/settings.json` が追跡されている。`CLAUDE.md` との関係（内容の重複・矛盾）を S0-08 で確認する
 - 設計への反映: Expo Router のルートは `src/app/`（ARCHITECTURE §3 と CLAUDE.md を修正済み）
 
-## 次の一手（S0-06 の確認）
+## 次の一手
 
-手順は S0-06 の報告メッセージを参照。実行後、次を Claude に貼る。
-
-1. `npx expo install @supabase/supabase-js` の結果（導入されたバージョン）
-2. `git check-ignore -v .env .env.local .env.example` の出力（`.env` と `.env.local` は除外、`.env.example` は除外されない）
-3. `npm run format` の `git diff --stat`、`npm run check` の出力（テストは 40 件になる想定）
+1. ユーザーが S0-07 の着手を承認する（`@tanstack/react-query` と `zustand` の導入承認を含む）。
+2. S0-07 → S0-09（CI）→ S0-08 → S0-10 の順。S0-10 で Sprint 1A 着手を判断する。
+3. Sprint 1A-01 の前に Q-15（開発用 Supabase クラウドプロジェクトの作成）。S1B-01 の前に Q-06。
 
 ## 確認結果ログ（ユーザー実行分を貼る）
 
@@ -101,7 +100,9 @@
 
 - 2026-11-08 S0-05 のコミット 2be43eb 後、`npm run check` は警告 0・エラー 0・23 tests 成功
 - S0-06 作成: 検証ロジック（`readSupabaseConfig`）は Claude 側で Node 22 により、テストと同じ 19 ケースを直接実行して確認済み（Jest 実行・`tsc` は未実施）。クライアント生成（`createClient`）は未テスト（S1A-02 で確認）
-- 注意: テンプレートの `.gitignore` は `.env*.local` しか除外していない可能性があるため、`.env` / `.env.*` / `!.env.example` を追記する
+- 2026-11-08 S0-06 完了: `npx expo install @supabase/supabase-js` 成功（9 packages 追加。バージョン番号は未記録。`package.json` で確認）。`npm audit` は 31 件（low 1 / moderate 30）で導入前と同数。`.gitignore` へ `.env` / `.env.*` / `!.env.example` を追記、`git check-ignore -v` で `.env` と `.env.local` が除外、`.env.example` は対象外（追跡）。コミット 4ce91f9（14 files）、`npm run format` で `supabase-config.ts` と同テストのみ整形 → f4b5363。`npm run check`: typecheck 0 件、lint 0 件、3 suites・40 tests 成功
+- S0-06 で未確認: `createClient` の実行時動作（環境変数を設定した状態での起動）、React Native での URL polyfill の要否 → S1A-02 で確認
+- 注意: `.gitignore` の LF/CRLF 警告（`CRLF will be replaced by LF`）は `.gitattributes` により無害
 
 ## 更新ルール
 

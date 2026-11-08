@@ -29,8 +29,8 @@
 | S0-03 | 基本フォルダ構成の作成（ARCHITECTURE §3） | §3.2, NFR-004 | S | ☑ 2026-11-08（tsc 0件、Web 表示確認、コミット済み） |
 | S0-04 | 品質ゲート: typecheck / ESLint / Prettier / Jest スモークテスト / npm scripts | 規則7, NFR-004 | M | ☑ 2026-11-08（check 成功、失敗確認済み、audit 方針記録） |
 | S0-05 | 共通UI・テーマ: カラー、Screen / Text / Button / EmptyState、子ども色トークン | §3.2, NFR-001, FR-047(基盤) | M | ☑ 2026-11-08（check 成功、Web でアイコン・ダークモード・遷移を確認。Expo Go 実機は未確認） |
-| S0-06 | Supabase 準備: `lib/supabase.ts`、`.env.example`、`.gitignore`、`supabase/` ディレクトリ（テーブル作成なし） | SEC-004, §3.2 | M | ◐（作成済み・ユーザー確認待ち） |
-| S0-07 | QueryClientProvider と Zustand の最小骨組み（選択中の子どもID） | §3.1, FR-013(基盤) | S | ☐ |
+| S0-06 | Supabase 準備: `lib/supabase.ts`、`.env.example`、`.gitignore`、`supabase/` ディレクトリ（テーブル作成なし） | SEC-004, §3.2 | M | ☑ 2026-11-08（check 成功 40 tests、.gitignore 確認済み。createClient の実行時確認は S1A-02） |
+| S0-07 | QueryClientProvider と Zustand の最小骨組み（選択中の子どもID） | §3.1, FR-013(基盤) | S | ◐（作成済み・ユーザー確認待ち） |
 | S0-08 | ドキュメント: README.md、REQUIREMENTS.md の `docs/` 配置、ARCHITECTURE.md / SPRINT_BACKLOG.md / CLAUDE.md の最終化 | §14 | S | ◐（CLAUDE/ARCH/BACKLOG ドラフト済） |
 | S0-09 | （提案・要承認）GitHub Actions で typecheck/lint/test を実行 | 規則7, 8 | S | ☐（承認済） |
 | S0-10 | Sprint 0 レビュー、Sprint 1A 着手判断 | — | S | ☐ |

@@ -67,10 +67,10 @@ src/
       components/  hooks/  repository/  types.ts
   lib/
     supabase.ts              # Supabaseクライアント（唯一の生成場所）
-    queryClient.ts
+    query-client.ts          # QueryClient の生成（既定値はここだけ）
   services/
     ocr/  extraction/        # インターフェース + 実装（Sprint 3）
-  store/                     # Zustand
+  store/                     # Zustand（ui-store.ts: selectedChildId のみ）
   theme/                     # 色・余白・タイポグラフィ
   types/                     # 共通型 / DB生成型
   utils/
