@@ -27,7 +27,7 @@
 | S0-01 | 既存リポジトリの確認、Expo + RN + TS(strict) プロジェクト準備、SDK/Node バージョン固定 | NFR-004, NFR-005, §3.1 | M | ☑ 2026-11-08（Web 表示確認済み。Expo Go 実機は S0-02 で確認） |
 | S0-02 | Expo Router 設定、5タブ + 詳細画面（SCR-001〜007）の空スケルトン | §5, §3.3 | M | ☑ 2026-11-08（tsc 0件、Web で表示確認。Expo Go 実機は未確認） |
 | S0-03 | 基本フォルダ構成の作成（ARCHITECTURE §3） | §3.2, NFR-004 | S | ☑ 2026-11-08（tsc 0件、Web 表示確認、コミット済み） |
-| S0-04 | 品質ゲート: typecheck / ESLint / Prettier / Jest スモークテスト / npm scripts | 規則7, NFR-004 | M | ◐（設定作成済み・ユーザーのローカル実行待ち） |
+| S0-04 | 品質ゲート: typecheck / ESLint / Prettier / Jest スモークテスト / npm scripts | 規則7, NFR-004 | M | ☑ 2026-11-08（check 成功、失敗確認済み、audit 方針記録） |
 | S0-05 | 共通UI・テーマ: カラー、Screen / Text / Button / EmptyState、子ども色トークン | §3.2, NFR-001, FR-047(基盤) | M | ☐ |
 | S0-06 | Supabase 準備: `lib/supabase.ts`、`.env.example`、`.gitignore`、`supabase/` ディレクトリ（テーブル作成なし） | SEC-004, §3.2 | M | ☐ |
 | S0-07 | QueryClientProvider と Zustand の最小骨組み（選択中の子どもID） | §3.1, FR-013(基盤) | S | ☐ |

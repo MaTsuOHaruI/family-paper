@@ -3,14 +3,14 @@
 作業の再開時は、まず `CLAUDE.md` → 本ファイル → `docs/SPRINT_BACKLOG.md` の順に読む。
 状態の正はリポジトリ（本ファイルとバックログ）であり、チャットの記憶ではない。
 
-- 最終更新: 2026-11-08（S0-04 実行結果の反映）
+- 最終更新: 2026-11-08（S0-04 完了）
 - 運用: GitHub への反映はユーザーが行う。Claude はチャット上でファイルを作成・更新して渡す。
 - 制約: Claude のチャット環境ではパッケージ導入・`tsc`・`expo` が実行できない（ネットワーク無効）。確認コマンドはユーザーのローカルまたは CI（S0-09）で実行し、出力を Claude に貼る。
 
 ## 現在地
 
 - フェーズ: Sprint 0（開発基盤）
-- 現在のタスク: **S0-04**（品質ゲート）— `typecheck` / `test` 成功、テンプレート由来の lint エラーは修正済み。改行コード（CRLF 混入）の対策として `.gitattributes` を追加中（`s0-04c.zip`）。失敗確認の再実施と `npm audit --omit=dev` の記録が残り
+- 現在のタスク: S0-04 完了。S0-05 は方針（テーマの統合・アイコン）のユーザー承認待ち
 - 次のタスク: S0-05（共通UI・テーマ。`src/theme/` とテンプレート由来 `src/constants/theme.ts` の整理を含む）
 
 ## 完了済み
@@ -21,6 +21,7 @@
 | 2026-11-08 | S0-01 | Expo SDK 58 + TS(strict) を直下に配置、expo-doctor 20/20、Metro 起動と Web 表示（Welcome to Expo）を確認、`.nvmrc`(24) 追加 |
 | 2026-11-08 | S0-02 | 5タブ + 詳細画面のスケルトン。`tsc` エラー 0 件、Web で表示確認（ユーザー報告）。Expo Go 実機は未確認 |
 | 2026-11-08 | S0-03 | 基本フォルダ構成。`tsc` 0 件、Web で全タブ表示、コミット `[S0-03] Add base folder structure` |
+| 2026-11-08 | S0-04 | `npm run check`（typecheck / lint / test）成功。型・整形・テストの失敗確認済み。ESLint + Prettier（lint 統合）/ Jest 30 + jest-expo / `.gitattributes`（LF）。コミット d607981, 646b7bb ほか |
 | 2026-11-08 | （S0-08 の一部） | CLAUDE.md / ARCHITECTURE.md / SPRINT_BACKLOG.md / PROGRESS.md のドラフト作成 |
 
 ## 決定事項（要点。詳細は ARCHITECTURE.md §11）
@@ -40,17 +41,13 @@
 - Q-15: 開発用 Supabase クラウドプロジェクトの作成（ユーザー作業、S1A-01 前まで）
 - S0-01: 画面表示は確認済み（Welcome to Expo）。実機（Expo Go）で見たかは未確認
 - テンプレート由来の依存（`@expo/ui`、`expo-glass-effect` 等）の整理は S0-02 以降で提案
-- `npm audit` 31 件（開発ツール由来）。`--force` は使わない。S4-04 で再評価（詳細は確認結果ログ）
+- `npm audit`: 全体 31 件（開発ツール由来）、実行時依存（`--omit=dev`）は 5 件 moderate（`glob` / `minimatch` が `@expo/cli` / `@expo/fingerprint` 経由）。開発・ビルド用 CLI の依存と判断。`--force`（expo@52 へのダウングレード）は実行しない。S4-04 または SDK 更新時に再評価
 - テンプレート由来の `AGENTS.md` と `.claude/settings.json` が追跡されている。`CLAUDE.md` との関係（内容の重複・矛盾）を S0-08 で確認する
 - 設計への反映: Expo Router のルートは `src/app/`（ARCHITECTURE §3 と CLAUDE.md を修正済み）
 
-## 次の一手（S0-04 の残り）
+## 次の一手（S0-05）
 
-1. `s0-04c.zip` を展開し、`git add --renormalize .` → `npm run format` → `npm run lint` が 0 件になること
-3. 失敗確認のやり直し（型・lint・テスト。ASCII のみの一時ファイルを使う）
-4. `npm audit --omit=dev` と `Get-Content package.json`（導入バージョンの記録）
-
-受け入れ条件: SPRINT_BACKLOG.md の S0-04 を参照。
+方針の承認後に着手する。論点: (1) テンプレート由来のテーマ関連ファイルを `src/theme/` へ統合し未使用分を削除、(2) タブのアイコン用に `@expo/vector-icons` を明示的に導入、(3) 配色の方向性（中立色 + 子ども別カラーのプリセット）。
 
 ## 確認結果ログ（ユーザー実行分を貼る）
 
@@ -81,6 +78,12 @@
 - 方針案: 実行時に端末へ入る依存かどうかを `npm audit --omit=dev` で確認し、開発ツール由来は SDK 更新時に解消する。Sprint 4 のセキュリティ確認（S4-04）で再評価する
 
 - 2026-11-08 `s0-04b.zip` 適用後の `npm run lint`: `smoke.test.ts` のみ 9 件（`prettier/prettier` Delete `␍`）。原因は `git checkout` による CRLF 変換（Windows の autocrlf）。他ファイルはエラーなし（`use-color-scheme.web.ts` の件は解消）。対応: `.gitattributes`（`* text=auto eol=lf`）を追加
+
+- 2026-11-08 S0-04 完了: `.gitattributes` 追加後、`npm run format` → `npm run lint` はエラー 0 件（コミット d607981）。失敗確認: `_probe.ts` で typecheck（TS2322）と lint（prettier/prettier）が失敗、`_fail.test.ts` で jest が失敗（`Expected: 2 / Received: 1`）。一時ファイルは削除済みで `git status` は clean
+- 導入バージョン: eslint ^9.39.5 / eslint-config-expo ~58.0.4 / prettier ^3.9.10 / eslint-config-prettier ^10.1.8 / eslint-plugin-prettier ^5.5.7 / jest ~30.5.2 / jest-expo ~58.0.14 / @types/jest 30.0.0。`npx expo install ... "--" --dev` では `dependencies` に入っていたため `npm install --save-dev` で `devDependencies` へ移動（コミット 646b7bb）。`npm run check` は移動後も成功
+- `npm audit --omit=dev`: 5 件 moderate（`glob` 9.0.0–14.0.1、`minimatch` 7.0.0–11.0.0。`expo` 内の `@expo/cli`・`@expo/fingerprint` 経由）。修正案は `expo@52.0.49`（破壊的）のため実行しない
+- 注意: `eslint@9.39.5` は npm で「サポート終了」の警告が出る。ESLint 10 への移行は `eslint-config-expo` 側の対応を見て、SDK 更新時に検討する
+- 注意: ユーザー環境ではコマンドを複数行まとめて貼ると連結されることがあった。手順は 1 行ずつ、または `;` 区切りの 1 行にして渡す
 
 ## 更新ルール
 

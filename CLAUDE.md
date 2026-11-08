@@ -82,7 +82,7 @@ SDK・主要ライブラリのバージョンは Sprint 0 で固定し、`docs/A
 - コメントは「なぜ」を書く。要件ID に紐づく重要処理には ID を記載してよい。
 - サンプルデータは `src/dev/` または `supabase/seed.sql` に隔離し、本番データと混ぜない。UI上でも判別できるようにする。
 
-## 10. コマンド（S0-04 で整備。ユーザーのローカル確認後に確定）
+## 10. コマンド（S0-04 で整備・確認済み）
 
 ```
 npm run typecheck   # tsc --noEmit
@@ -93,7 +93,9 @@ npm run check       # typecheck + lint + test
 npm run start       # expo start
 ```
 
-注意: `npm audit fix --force` は実行しない（メジャー更新で SDK の整合性が崩れる）。
+注意:
+- `npm audit fix --force` は実行しない（メジャー更新で SDK の整合性が崩れる。`expo@52` へのダウングレードが提案される）。
+- 開発用パッケージは `npm install --save-dev <pkg>@<範囲>` で入れる。Windows の `npx expo install ... "--" --dev` は `devDependencies` にならない（`dependencies` に入る）ことがある。
 
 各タスク完了前に `typecheck` / `lint` / `test` を実行する。実行できない環境の場合はその旨と代替確認方法を報告する。
 
