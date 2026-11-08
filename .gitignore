@@ -41,3 +41,8 @@ example
 # generated native folders
 /ios
 /android
+
+# Environment files (SEC-004): only .env.example is committed
+.env
+.env.*
+!.env.example

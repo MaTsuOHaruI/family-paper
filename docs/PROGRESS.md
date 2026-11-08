@@ -3,15 +3,15 @@
 作業の再開時は、まず `CLAUDE.md` → 本ファイル → `docs/SPRINT_BACKLOG.md` の順に読む。
 状態の正はリポジトリ（本ファイルとバックログ）であり、チャットの記憶ではない。
 
-- 最終更新: 2026-11-08（S0-05 完了）
+- 最終更新: 2026-11-08（S0-06 作成時）
 - 運用: GitHub への反映はユーザーが行う。Claude はチャット上でファイルを作成・更新して渡す。
 - 制約: Claude のチャット環境ではパッケージ導入・`tsc`・`expo` が実行できない（ネットワーク無効）。確認コマンドはユーザーのローカルまたは CI（S0-09）で実行し、出力を Claude に貼る。
 
 ## 現在地
 
 - フェーズ: Sprint 0（開発基盤）
-- 現在のタスク: S0-05 完了。S0-06（Supabase 準備）は方針（ライブラリ導入）のユーザー承認待ち
-- 次のタスク: S0-06（Supabase 準備。テーブルなし）。S0-09（CI）は品質ゲートが整ったので S0-06 の前後どちらでも可
+- 現在のタスク: **S0-06**（Supabase 準備）— ファイル作成済み（`s0-06.zip`）。`@supabase/supabase-js` の導入、`.gitignore` の追記、各コマンドの実行はユーザーのローカルで行う（結果待ち）
+- 次のタスク: S0-07（QueryClient と Zustand）→ S0-09（CI）→ S0-08（README 等）→ S0-10（Sprint 0 レビュー）
 
 ## 完了済み
 
@@ -38,6 +38,7 @@
 ## 未解決・確認待ち
 
 - S0-05 の判断（ユーザー承認済み）: テーマ統合・`@expo/vector-icons` 導入・配色は中立色基調（ブランドカラー未定）。ブランドカラーの指定があれば `src/theme/colors.ts` を変更する
+- S0-06 の判断（ユーザー承認済み）: ライブラリは `@supabase/supabase-js` のみ。セッション保存は S1A-02 で決定
 - Q-06: 1ページ上限サイズ・1書類の最大ページ数（S1B-01 前に決定）
 - Q-04: SCR-008〜011 を要件書 §5 に追記してよいか
 - Q-15: 開発用 Supabase クラウドプロジェクトの作成（ユーザー作業、S1A-01 前まで）
@@ -47,9 +48,13 @@
 - テンプレート由来の `AGENTS.md` と `.claude/settings.json` が追跡されている。`CLAUDE.md` との関係（内容の重複・矛盾）を S0-08 で確認する
 - 設計への反映: Expo Router のルートは `src/app/`（ARCHITECTURE §3 と CLAUDE.md を修正済み）
 
-## 次の一手（S0-06）
+## 次の一手（S0-06 の確認）
 
-方針の承認後に着手する。内容: `@supabase/supabase-js` の導入、`src/lib/supabase.ts`（環境変数未設定時に分かりやすいエラー）、`.env.example`、`.gitignore` の確認、`supabase/` ディレクトリ（`migrations/` と `functions/` のみ。テーブル・RLS は S1A-01）。セッション保存方式は S1A-02 で決める。
+手順は S0-06 の報告メッセージを参照。実行後、次を Claude に貼る。
+
+1. `npx expo install @supabase/supabase-js` の結果（導入されたバージョン）
+2. `git check-ignore -v .env .env.local .env.example` の出力（`.env` と `.env.local` は除外、`.env.example` は除外されない）
+3. `npm run format` の `git diff --stat`、`npm run check` の出力（テストは 40 件になる想定）
 
 ## 確認結果ログ（ユーザー実行分を貼る）
 
@@ -93,6 +98,10 @@
 
 - 2026-11-08 S0-05 完了: 型エラーはタブアイコンの `color`（`ColorValue` が `number` / `null` を含み `Ionicons` と不一致）を、`focused` とテーマのトークンから色を決める形に変更して解消（コミット e2799b6 の後、`s0-05d.zip`）。`npm run check`: typecheck 0 件、lint 警告 1 件（`@typescript-eslint/array-type`、theme.test.ts:30）→ `T[]` 形式へ修正、test 23 件成功。Web: 5 タブのアイコン、選択中のタブのみ青系、ダークモード切替、書類・カレンダーから詳細画面へ遷移して戻れることをユーザーが確認
 - 未確認: Expo Go（実機）での表示。Q-11 に従いユーザー確認待ちとして残す
+
+- 2026-11-08 S0-05 のコミット 2be43eb 後、`npm run check` は警告 0・エラー 0・23 tests 成功
+- S0-06 作成: 検証ロジック（`readSupabaseConfig`）は Claude 側で Node 22 により、テストと同じ 19 ケースを直接実行して確認済み（Jest 実行・`tsc` は未実施）。クライアント生成（`createClient`）は未テスト（S1A-02 で確認）
+- 注意: テンプレートの `.gitignore` は `.env*.local` しか除外していない可能性があるため、`.env` / `.env.*` / `!.env.example` を追記する
 
 ## 更新ルール
 

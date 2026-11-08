@@ -65,6 +65,7 @@ SDK・主要ライブラリのバージョンは Sprint 0 で固定し、`docs/A
 - AI/OCR の秘密鍵は将来サーバー側（Edge Function 等）で管理する。
 - セキュリティに関係する変更（RLS、Storageポリシー、認証、鍵、削除処理）は、完了報告で必ず説明する。
 - 個人情報（子どもの名前・学校名・書類画像）をログ・クラッシュレポート・テストデータに出さない。
+- Supabase の接続情報は `.env`（`EXPO_PUBLIC_SUPABASE_URL` / `EXPO_PUBLIC_SUPABASE_ANON_KEY`）に置く。`.env.example` を `.env` にコピーして使う。クライアントは `@/lib/supabase` の `getSupabaseClient()` だけを経由し、repository から呼ぶ。`service_role` / `sb_secret_` キーは設定してはならない（設定するとエラーで止まる）。
 
 ## 8. 元画像の保護（最優先）
 

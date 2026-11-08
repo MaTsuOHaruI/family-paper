@@ -89,7 +89,7 @@ docs/
   `src/features/{auth,children,documents,events,extraction}/{components,hooks,repository}`、`src/lib`、`src/services/{ocr,extraction}`、`src/store`、`src/utils`、`src/dev`、`src/types`
 - `types.ts`（各 feature）は、型が必要になったタスクで追加する（空ファイルは作らない）。
 - 作成済み（S0-05）: `src/theme/`（`colors.ts` / `child-colors.ts` / `tokens.ts` / `use-color-scheme(.web).ts` / `index.ts`）。
-- 未作成（担当タスクで作る）: `supabase/`（S0-06）。
+- 作成済み（S0-06）: `supabase/{migrations,functions}`、`src/lib/supabase.ts`（クライアントの唯一の生成場所）、`src/lib/supabase-config.ts`（環境変数の検証）、`.env.example`。`config.toml` は S1A-01 で `supabase init` により作成する。
 - テンプレート由来の `src/constants/theme.ts`、`src/hooks/`、`themed-text.tsx` / `themed-view.tsx`、`src/global.css`、`src/types/css.d.ts` は S0-05 で `src/theme/` に統合し削除した。未使用のテンプレート画像（`assets/images/tabIcons`、`expo-badge*`、`react-logo*`、`tutorial-web.png`、`assets/expo.icon` など）は S0-08 で整理を提案する。
 
 ### 3.2 テーマ・共通UI（S0-05）
@@ -166,6 +166,9 @@ SCR-005 / SCR-006 はスタック遷移の詳細画面。要件書に画面定�
 
 - RLS: 全テーブル有効。基本は `parent_id = auth.uid()`。関連テーブルは親の所有者を検証。
 - 秘密情報: クライアントは公開 anon key のみ。`.env` は Git 管理外、`.env.example` のみコミット（SEC-004）。
+- 環境変数は `EXPO_PUBLIC_SUPABASE_URL` と `EXPO_PUBLIC_SUPABASE_ANON_KEY`（publishable キーも可）。`readSupabaseConfig` が、未設定・URL 不正・ダミー値のまま・`service_role` / `sb_secret_` キーの混入を、通信前にエラーにする（エラー文にキーの値は含めない）。
+- Supabase クライアントは `getSupabaseClient()` で初回利用時に生成する（環境変数が未設定でも Supabase を使わない画面は動く）。セッションの保存（`persistSession`）は S1A-02 で決めるまで無効。
+- 確認が必要な点（S1A-02）: React Native で `@supabase/supabase-js` が URL polyfill なしで動くか。必要なら `react-native-url-polyfill` の導入を提案する。
 - セッション保存: Supabase セッションは端末の安全な保存先へ（`expo-secure-store` はサイズ制限があるため、保存方式は S1 の認証タスクで決定）。
 - テスト: AT-010 を自動化（2ユーザーで相互アクセス不可を検証）することを Sprint 1 の完了条件に含める。
 - 個人情報: ログ・テストデータに実データを含めない。
