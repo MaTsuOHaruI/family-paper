@@ -34,22 +34,10 @@ export default function TabsLayout() {
         tabBarStyle: { backgroundColor: colors.background, borderTopColor: colors.border },
       }}>
       <Tabs.Screen name="index" options={{ title: 'ホーム', tabBarIcon: HomeIcon }} />
-      <Tabs.Screen
-        name="calendar"
-        options={{ title: 'カレンダー', tabBarIcon: CalendarIcon }}
-      />
-      <Tabs.Screen
-        name="documents"
-        options={{ title: '書類', tabBarIcon: DocumentsIcon }}
-      />
-      <Tabs.Screen
-        name="add-document"
-        options={{ title: '登録', tabBarIcon: AddDocumentIcon }}
-      />
-      <Tabs.Screen
-        name="family"
-        options={{ title: '家族・設定', tabBarIcon: FamilyIcon }}
-      />
+      <Tabs.Screen name="calendar" options={{ title: 'カレンダー', tabBarIcon: CalendarIcon }} />
+      <Tabs.Screen name="documents" options={{ title: '書類', tabBarIcon: DocumentsIcon }} />
+      <Tabs.Screen name="add-document" options={{ title: '登録', tabBarIcon: AddDocumentIcon }} />
+      <Tabs.Screen name="family" options={{ title: '家族・設定', tabBarIcon: FamilyIcon }} />
     </Tabs>
   );
 }
