@@ -3,15 +3,15 @@
 作業の再開時は、まず `CLAUDE.md` → 本ファイル → `docs/SPRINT_BACKLOG.md` の順に読む。
 状態の正はリポジトリ（本ファイルとバックログ）であり、チャットの記憶ではない。
 
-- 最終更新: 2026-11-08（S0-06 完了時）
+- 最終更新: 2026-11-09（S0-07 完了時）
 - 運用: GitHub への反映はユーザーが行う。Claude はチャット上でファイルを作成・更新して渡す。
 - 制約: Claude のチャット環境ではパッケージ導入・`tsc`・`expo` が実行できない（ネットワーク無効）。確認コマンドはユーザーのローカルまたは CI（S0-09）で実行し、出力を Claude に貼る。
 
 ## 現在地
 
 - フェーズ: Sprint 0（開発基盤）
-- 現在のタスク: **S0-07**（QueryClient と Zustand）— ファイル作成済み（`s0-07.zip`）。ライブラリ導入と `npm run check` はユーザーのローカルで実行（結果待ち。導入承認済み）
-- 次のタスク: S0-07（QueryClient と Zustand。TanStack Query / Zustand の導入承認が必要）→ S0-09（CI）→ S0-08（README 等）→ S0-10（Sprint 0 レビュー）
+- 現在のタスク: なし（S0-07 完了。次タスクの承認待ち）
+- 次のタスク: S0-09（CI。承認済み）→ S0-08（README 等）→ S0-10（Sprint 0 レビュー）
 
 ## 完了済み
 
@@ -24,6 +24,7 @@
 | 2026-11-08 | S0-04 | `npm run check`（typecheck / lint / test）成功。型・整形・テストの失敗確認済み。ESLint + Prettier（lint 統合）/ Jest 30 + jest-expo / `.gitattributes`（LF）。コミット d607981, 646b7bb ほか |
 | 2026-11-08 | S0-05 | `src/theme/`（色・余白・文字・子ども 6 色 + 色なし）、`Screen` / `AppText` / `Button` / `EmptyState`、タブアイコン（Ionicons）、コントラスト比のテスト。`npm run check` 成功（23 tests）。Web でアイコン・選択色・ダークモード・詳細画面への遷移を確認 |
 | 2026-11-08 | S0-06 | `src/lib/supabase.ts`（遅延生成の `getSupabaseClient()`）、`supabase-config.ts`（環境変数検証。`service_role` / `sb_secret_` を通信前に拒否）、`.env.example`、`supabase/`、`.gitignore` 追記。`npm run check` 成功（40 tests）。`git check-ignore` で `.env` / `.env.local` は除外、`.env.example` は追跡を確認。コミット 4ce91f9, f4b5363 |
+| 2026-11-09 | S0-07 | `QueryClientProvider`（`src/lib/query-client.ts`、`_layout.tsx`）、Zustand `ui-store`（`selectedChildId` のみ、永続化なし）。導入: `@tanstack/react-query` ^5.107.1 / `zustand` ^5.1.0。`npm run check` 成功（5 suites・46 tests）、Web で全タブの表示を目視確認。コミット af2ee06, 52857e6 |
 | 2026-11-08 | （S0-08 の一部） | CLAUDE.md / ARCHITECTURE.md / SPRINT_BACKLOG.md / PROGRESS.md のドラフト作成 |
 
 ## 決定事項（要点。詳細は ARCHITECTURE.md §11）
@@ -51,8 +52,8 @@
 
 ## 次の一手
 
-1. ユーザーが S0-07 の着手を承認する（`@tanstack/react-query` と `zustand` の導入承認を含む）。
-2. S0-07 → S0-09（CI）→ S0-08 → S0-10 の順。S0-10 で Sprint 1A 着手を判断する。
+1. ユーザーが S0-09（GitHub Actions で typecheck / lint / test）の着手を承認する。
+2. S0-09 → S0-08 → S0-10。S0-10 で Sprint 1A 着手を判断する。
 3. Sprint 1A-01 の前に Q-15（開発用 Supabase クラウドプロジェクトの作成）。S1B-01 の前に Q-06。
 
 ## 確認結果ログ（ユーザー実行分を貼る）
@@ -104,7 +105,7 @@
 - S0-06 で未確認: `createClient` の実行時動作（環境変数を設定した状態での起動）、React Native での URL polyfill の要否 → S1A-02 で確認
 - 注意: `.gitignore` の LF/CRLF 警告（`CRLF will be replaced by LF`）は `.gitattributes` により無害
 
-- 2026-11-08 S0-07: `npx expo install @tanstack/react-query zustand` 成功（3 packages。`@tanstack/react-query` ^5.107.1 / `zustand` ^5.1.0）。コミット af2ee06。`npm run format` は変更なし。`npm run check` の `typecheck` で 17 件のエラー（新規 2 テストの `describe` / `it` / `expect` / `beforeEach` が未定義）。原因: 既存テストと同じ `import … from '@jest/globals'` を書き忘れた（Claude のミス）。対応: 2 ファイルに import を追加（`s0-07b.zip`）。`npx expo start --web`: 全タブ・予定詳細のバンドル成功、エラーなし（画面の目視は未報告）
+- 2026-11-08 S0-07: `npx expo install @tanstack/react-query zustand` 成功（3 packages。`@tanstack/react-query` ^5.107.1 / `zustand` ^5.1.0）。コミット af2ee06。`npm run format` は変更なし。`npm run check` の `typecheck` で 17 件のエラー（新規 2 テストの `describe` / `it` / `expect` / `beforeEach` が未定義）。原因: 既存テストと同じ `import … from '@jest/globals'` を書き忘れた（Claude のミス）。対応: 2 ファイルに import を追加（`s0-07b.zip`、コミット 52857e6）。再実行の `npm run check`: typecheck 0 件・lint 0 件・5 suites / 46 tests 成功。`npx expo start --web`: 全タブ・予定詳細のバンドル成功、エラーなし（ユーザーが目視で問題なしと確認（2026-11-09））
 
 ## 更新ルール
 
