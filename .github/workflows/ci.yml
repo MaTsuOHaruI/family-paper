@@ -1,0 +1,44 @@
+name: CI
+
+# 品質ゲート（CLAUDE.md §10）を GitHub 側でも実行する。
+# シークレットは使わない。環境変数（EXPO_PUBLIC_*）も不要（テストはダミー値のみ）。
+on:
+  push:
+    branches: [main, master]
+  pull_request:
+
+# 権限は読み取りのみ（最小権限）。
+permissions:
+  contents: read
+
+# 同じブランチで新しい push があれば、古い実行を止める。
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+
+      # Node のバージョンは .nvmrc（24）に合わせる。
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+
+      # package-lock.json の通りに導入する（ロックファイルを書き換えない）。
+      - name: Install dependencies
+        run: npm ci
+
+      # npm run check と同じ内容。失敗箇所が分かるよう 3 つに分ける。
+      - name: Typecheck
+        run: npm run typecheck
+
+      - name: Lint
+        run: npm run lint
+
+      - name: Test
+        run: npm run test

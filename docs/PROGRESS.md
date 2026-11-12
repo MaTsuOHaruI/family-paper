@@ -10,8 +10,8 @@
 ## 現在地
 
 - フェーズ: Sprint 0（開発基盤）
-- 現在のタスク: なし（S0-07 完了。次タスクの承認待ち）
-- 次のタスク: S0-09（CI。承認済み）→ S0-08（README 等）→ S0-10（Sprint 0 レビュー）
+- 現在のタスク: **S0-09**（CI）— `.github/workflows/ci.yml` 作成済み（`s0-09.zip`）。push 後の GitHub Actions の結果待ち
+- 次のタスク: S0-08（README 等）→ S0-10（Sprint 0 レビュー）
 
 ## 完了済み
 
@@ -52,8 +52,8 @@
 
 ## 次の一手
 
-1. ユーザーが S0-09（GitHub Actions で typecheck / lint / test）の着手を承認する。
-2. S0-09 → S0-08 → S0-10。S0-10 で Sprint 1A 着手を判断する。
+1. `s0-09.zip` を適用して push し、GitHub の Actions タブで CI が緑になるか確認して結果を貼る。
+2. S0-08 → S0-10。S0-10 で Sprint 1A 着手を判断する。
 3. Sprint 1A-01 の前に Q-15（開発用 Supabase クラウドプロジェクトの作成）。S1B-01 の前に Q-06。
 
 ## 確認結果ログ（ユーザー実行分を貼る）
@@ -106,6 +106,9 @@
 - 注意: `.gitignore` の LF/CRLF 警告（`CRLF will be replaced by LF`）は `.gitattributes` により無害
 
 - 2026-11-08 S0-07: `npx expo install @tanstack/react-query zustand` 成功（3 packages。`@tanstack/react-query` ^5.107.1 / `zustand` ^5.1.0）。コミット af2ee06。`npm run format` は変更なし。`npm run check` の `typecheck` で 17 件のエラー（新規 2 テストの `describe` / `it` / `expect` / `beforeEach` が未定義）。原因: 既存テストと同じ `import … from '@jest/globals'` を書き忘れた（Claude のミス）。対応: 2 ファイルに import を追加（`s0-07b.zip`、コミット 52857e6）。再実行の `npm run check`: typecheck 0 件・lint 0 件・5 suites / 46 tests 成功。`npx expo start --web`: 全タブ・予定詳細のバンドル成功、エラーなし（ユーザーが目視で問題なしと確認（2026-11-09））
+
+- S0-09 作成: `.github/workflows/ci.yml`（`actions/checkout@v4`、`actions/setup-node@v4`＋`.nvmrc`、`npm ci` → typecheck / lint / test。権限 `contents: read`、シークレットなし）。トリガーは `main` / `master` への push と全 pull_request。未確認: GitHub 上での実行（Linux で `npm ci` が通るか、Windows 生成のロックファイルとの整合を含む）
+- 注意: CLAUDE.md §11 は「main」と書くが、ユーザーのリポジトリのブランチ名は `master`。CI は両方を対象にした。ブランチ名の方針は S0-08 で確認する
 
 ## 更新ルール
 
